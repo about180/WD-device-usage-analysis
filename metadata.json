@@ -1,0 +1,6 @@
+{
+  "name": "Device Usage Analytics",
+  "description": "Professional web-based analyzer for receiver logs, featuring user queries, firmware analysis, and usage distribution charts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
