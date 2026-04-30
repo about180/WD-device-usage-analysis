@@ -52,7 +52,7 @@ export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
 
 export const isValidFilename = (filename: string): boolean => {
   const lower = filename.toLowerCase();
-  return lower.startsWith('receiverlogstable') || lower.startsWith('receiver_logs');
+  return lower.startsWith('receiverlog') || lower.startsWith('receiver_log');
 };
 
 export const generateHSLColor = (index: number, total: number) => {
