@@ -6,3 +6,20 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Vite output
+dist
+dist-ssr
+*.local
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

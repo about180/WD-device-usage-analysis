@@ -14,10 +14,10 @@ const COLUMN_MAPPING: Record<string, keyof ReceiverLog> = {
   'Channel': 'channel',
   'EventDescription': 'eventDescription',
   'Event Description': 'eventDescription',
-  'Date & Time': 'recordTime',
-  'RecordTime': 'recordTime',
   'Duration': 'duration',
-  'Duration (second)': 'duration'
+  'Duration (second)': 'duration',
+  'Date & Time': 'recordTime',
+  'RecordTime': 'recordTime'
 };
 
 export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
@@ -34,6 +34,11 @@ export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
             if (mappedKey) {
               if (mappedKey === 'duration') {
                 log[mappedKey] = parseFloat(row[key]) || 0;
+              } else if (mappedKey === 'recordTime') {
+                const dateVal = new Date(row[key]);
+                if (!isNaN(dateVal.getTime())) {
+                  log[mappedKey] = dateVal;
+                }
               } else {
                 log[mappedKey] = String(row[key] || '');
               }
