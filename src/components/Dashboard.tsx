@@ -20,60 +20,32 @@ interface DashboardProps {
 
 export default function Dashboard({ data, onReset, filename }: DashboardProps) {
   const [selectedMac, setSelectedMac] = useState<string>('All');
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string>('All Time');
+  const [timeRange, setTimeRange] = useState<string>('All Time');
   const [activeTab, setActiveTab] = useState(0);
 
   // Global All MACs
   const allMacs = useMemo(() => Array.from(new Set(data.map(d => d.receiverMac))).sort(), [data]);
 
-  const maxRecordTime = useMemo(() => {
-    let max = 0;
-    for (const d of data) {
-      if (d.recordTime) {
-        const t = d.recordTime.getTime();
-        if (t > max) max = t;
-      }
-    }
-    return max > 0 ? new Date(max) : new Date();
-  }, [data]);
-
-  // Filtered data based on global MAC filter and Time Range
+  // Filtered data based on global MAC and Time filters
   const filteredData = useMemo(() => {
-    let result = selectedMac === 'All' ? data : data.filter(d => d.receiverMac === selectedMac);
-    
-    if (selectedTimeRange !== 'All Time') {
-      const now = maxRecordTime;
-      let cutoff = new Date(0);
-      
-      switch (selectedTimeRange) {
-        case 'Past 1 Hour':
-          cutoff = new Date(now.getTime() - 60 * 60 * 1000);
-          break;
-        case 'Past 24 Hours':
-          cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-          break;
-        case 'Past 7 Days':
-          cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          break;
-        case 'Past 30 Days':
-          cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-          break;
-        case 'Past Quarter (90 days)':
-          cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-          break;
-        case 'Past Half Year (180 days)':
-          cutoff = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
-          break;
-        case 'Past Year (365 days)':
-          cutoff = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-          break;
+    let filtered = selectedMac === 'All' ? data : data.filter(d => d.receiverMac === selectedMac);
+
+    if (timeRange !== 'All Time') {
+      const now = Date.now();
+      let threshold = 0;
+      switch (timeRange) {
+        case 'Past 1 Hour': threshold = now - 1 * 60 * 60 * 1000; break;
+        case 'Past 24 Hours': threshold = now - 24 * 60 * 60 * 1000; break;
+        case 'Past 7 Days': threshold = now - 7 * 24 * 60 * 60 * 1000; break;
+        case 'Past 30 Days': threshold = now - 30 * 24 * 60 * 60 * 1000; break;
+        case 'Past Quarter (90 days)': threshold = now - 90 * 24 * 60 * 60 * 1000; break;
+        case 'Past Half Year (180 days)': threshold = now - 180 * 24 * 60 * 60 * 1000; break;
+        case 'Past Year (365 days)': threshold = now - 365 * 24 * 60 * 60 * 1000; break;
       }
-      
-      result = result.filter(d => d.recordTime && d.recordTime >= cutoff);
+      filtered = filtered.filter(d => d.recordTime && d.recordTime >= threshold);
     }
-    
-    return result;
-  }, [data, selectedMac, selectedTimeRange, maxRecordTime]);
+    return filtered;
+  }, [data, selectedMac, timeRange]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800">
@@ -93,39 +65,34 @@ export default function Dashboard({ data, onReset, filename }: DashboardProps) {
           </h1>
         </div>
 
-        <div className="flex items-center gap-4 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-          <label className="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-wider">Global Filter</label>
+        <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-wider whitespace-nowrap">Date & Time</label>
+          <div className="relative">
+            <select 
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="bg-white border-slate-200 rounded px-3 py-1 text-xs font-mono font-medium focus:ring-2 focus:ring-blue-500 outline-none pr-8 appearance-none cursor-pointer"
+            >
+              {['All Time', 'Past 1 Hour', 'Past 24 Hours', 'Past 7 Days', 'Past 30 Days', 'Past Quarter (90 days)', 'Past Half Year (180 days)', 'Past Year (365 days)'].map(r => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 absolute right-2 top-1.5 pointer-events-none text-slate-400" />
+          </div>
           
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <select 
-                value={selectedTimeRange}
-                onChange={(e) => setSelectedTimeRange(e.target.value)}
-                className="bg-white border-slate-200 rounded px-3 py-1 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none pr-8 appearance-none cursor-pointer"
-              >
-                <option value="All Time">All Time</option>
-                <option value="Past 1 Hour">Past 1 Hour</option>
-                <option value="Past 24 Hours">Past 24 Hours</option>
-                <option value="Past 7 Days">Past 7 Days</option>
-                <option value="Past 30 Days">Past 30 Days</option>
-                <option value="Past Quarter (90 days)">Past Quarter (90 days)</option>
-                <option value="Past Half Year (180 days)">Past Half Year (180 days)</option>
-                <option value="Past Year (365 days)">Past Year (365 days)</option>
-              </select>
-              <ChevronDown className="w-4 h-4 absolute right-2 top-1.5 pointer-events-none text-slate-400" />
-            </div>
-
-            <div className="relative">
-              <select 
-                value={selectedMac}
-                onChange={(e) => setSelectedMac(e.target.value)}
-                className="bg-white border-slate-200 rounded px-3 py-1 text-xs font-mono font-medium focus:ring-2 focus:ring-blue-500 outline-none pr-8 appearance-none cursor-pointer"
-              >
-                <option value="All">All Receivers ({allMacs.length})</option>
-                {allMacs.map(mac => <option key={mac} value={mac}>{mac}</option>)}
-              </select>
-              <ChevronDown className="w-4 h-4 absolute right-2 top-1.5 pointer-events-none text-slate-400" />
-            </div>
+          <div className="w-px h-6 bg-slate-200 mx-1"></div>
+          
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1 tracking-wider">Device</label>
+          <div className="relative">
+            <select 
+              value={selectedMac}
+              onChange={(e) => setSelectedMac(e.target.value)}
+              className="bg-white border-slate-200 rounded px-3 py-1 text-xs font-mono font-medium focus:ring-2 focus:ring-blue-500 outline-none pr-8 appearance-none cursor-pointer"
+            >
+              <option value="All">All Receivers ({allMacs.length})</option>
+              {allMacs.map(mac => <option key={mac} value={mac}>{mac}</option>)}
+            </select>
+            <ChevronDown className="w-4 h-4 absolute right-2 top-1.5 pointer-events-none text-slate-400" />
           </div>
         </div>
       </header>
@@ -290,6 +257,10 @@ function TabUserQuery({ data }: { data: ReceiverLog[] }) {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Search Sidebar - Teleported/Rendered conditionally elsewhere if we had a proper layout, 
+          but here we'll place it at the top for mobile and potentially sidebar for desktop if we use a portal or similar.
+          For this exercise, I'll put the filter in a sidebar-like card above the table.
+      */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Search Parameters</h3>
         <div className="flex flex-col md:flex-row items-end gap-4">
@@ -366,7 +337,7 @@ function TabUserQuery({ data }: { data: ReceiverLog[] }) {
                     <td className="px-4 py-3 text-center">
                       {row.hasMultipleValues && (
                         <button
-                           onClick={() => setPopupInfo(row.multipleValues!)}
+                          onClick={() => setPopupInfo(row.multipleValues!)}
                           className="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded text-[10px] font-bold hover:bg-amber-100 transition-colors inline-flex items-center gap-1"
                         >
                           <AlertTriangle className="w-3 h-3" />
@@ -926,9 +897,4 @@ function TabReboot({ data, selectedMac }: { data: ReceiverLog[], selectedMac: st
       </div>
     </div>
   );
-}
-
-function TabReboot_unused() {
-  // Placeholder for any additional logic if needed
-  return null;
 }

@@ -4,12 +4,12 @@
 
 # WD Device Usage Analysis
 
-## 最新功能：全局時間過濾器 (Global Date & Time Filter)
-近期加入了全域的「日期與時間」過濾功能：
-- **資料庫更新 (Data Schema Update)**：為 `ReceiverLog` 型別新增 `recordTime` 屬性，CSV 解析器現在支援讀取 "Date & Time" 與 "RecordTime" 欄位。
-- **全域過濾器 (Global Filter Bar)**：在頂部導覽列（Sticky Header）新增「時間區間」下拉選單，與設備過濾器並列，預設為「All Time」。
-- **支援多種區間 (Range Support)**：提供 Past 1 Hour, Past 24 Hours, Past 7 Days, Past 30 Days, Past Quarter, Past Half Year, Past Year 快速過濾。
-- **即時同步 (Real-time Sync)**：狀態統一在 `Dashboard.tsx` 頂層管理，切換時間區間時，所有頁籤 (User Query, Firmware, Receiver Analysis, Usage Share, Receiver Reboot) 都能即時同步更新結果。
+## 最新功能更新
+
+- **全域日期與時間過濾器 (Global Date & Time Filter):** 
+  - 新增 `RecordTime` 資料解析支援。
+  - 在頁首新增時間過濾下拉選單 (支援「過去 1 小時」到「過去 1 年」等多種區間)。
+  - 過濾狀態即時連動至所有分析分頁 (包含 User Query, Firmware, Receiver Analysis, Usage Share, Receiver Reboot)。
 
 ## 專案設定與執行
 

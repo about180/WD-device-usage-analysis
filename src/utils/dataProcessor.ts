@@ -17,7 +17,9 @@ const COLUMN_MAPPING: Record<string, keyof ReceiverLog> = {
   'Duration': 'duration',
   'Duration (second)': 'duration',
   'Date & Time': 'recordTime',
-  'RecordTime': 'recordTime'
+  'Date&Time': 'recordTime',
+  'RecordTime': 'recordTime',
+  'Record Time': 'recordTime'
 };
 
 export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
@@ -35,10 +37,9 @@ export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
               if (mappedKey === 'duration') {
                 log[mappedKey] = parseFloat(row[key]) || 0;
               } else if (mappedKey === 'recordTime') {
-                const dateVal = new Date(row[key]);
-                if (!isNaN(dateVal.getTime())) {
-                  log[mappedKey] = dateVal;
-                }
+                const dateStr = row[key] || '';
+                const parsedDate = new Date(dateStr);
+                log[mappedKey] = isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
               } else {
                 log[mappedKey] = String(row[key] || '');
               }
@@ -57,7 +58,7 @@ export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
 
 export const isValidFilename = (filename: string): boolean => {
   const lower = filename.toLowerCase();
-  return lower.startsWith('receiverlog') || lower.startsWith('receiver_log');
+  return lower.startsWith('receiverlogstable') || lower.startsWith('receiver_log');
 };
 
 export const generateHSLColor = (index: number, total: number) => {
