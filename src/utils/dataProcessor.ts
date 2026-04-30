@@ -14,6 +14,8 @@ const COLUMN_MAPPING: Record<string, keyof ReceiverLog> = {
   'Channel': 'channel',
   'EventDescription': 'eventDescription',
   'Event Description': 'eventDescription',
+  'Date & Time': 'recordTime',
+  'RecordTime': 'recordTime',
   'Duration': 'duration',
   'Duration (second)': 'duration'
 };
@@ -50,7 +52,7 @@ export const parseCSV = (file: File): Promise<ReceiverLog[]> => {
 
 export const isValidFilename = (filename: string): boolean => {
   const lower = filename.toLowerCase();
-  return lower.startsWith('receiverlogstable') || lower.startsWith('receiver_log');
+  return lower.startsWith('receiverlogstable') || lower.startsWith('receiver_logs');
 };
 
 export const generateHSLColor = (index: number, total: number) => {

@@ -16,7 +16,7 @@ export default function FileUpload({ onUploadSuccess }: FileUploadProps) {
   const handleFile = async (file: File) => {
     setError(null);
     if (!isValidFilename(file.name)) {
-      setError('Invalid filename. Please use ReceiverLogsTable*.csv or Receiver_Log*.csv');
+      setError('Invalid filename. Please use ReceiverLogsTable*.csv or Receiver_Logs*.csv');
       return;
     }
 
@@ -85,7 +85,7 @@ export default function FileUpload({ onUploadSuccess }: FileUploadProps) {
 
           <div className="text-center">
             <p className="text-xl font-medium text-gray-900">Click or drag CSV here</p>
-            <p className="text-sm text-gray-400 mt-1">Accepts ReceiverLogsTable*.csv and Receiver_Log*.csv</p>
+            <p className="text-sm text-gray-400 mt-1">Accepts ReceiverLogsTable*.csv and Receiver_Logs*.csv</p>
           </div>
         </div>
 

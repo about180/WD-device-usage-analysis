@@ -6,6 +6,7 @@ export interface ReceiverLog {
   channel: string;
   eventDescription: string;
   duration: number;
+  recordTime: string;
 }
 
 export interface UserQueryRow {

@@ -20,15 +20,37 @@ interface DashboardProps {
 
 export default function Dashboard({ data, onReset, filename }: DashboardProps) {
   const [selectedMac, setSelectedMac] = useState<string>('All');
+  const [startTime, setStartTime] = useState<string>('All');
   const [activeTab, setActiveTab] = useState(0);
 
   // Global All MACs
   const allMacs = useMemo(() => Array.from(new Set(data.map(d => d.receiverMac))).sort(), [data]);
 
-  // Filtered data based on global MAC filter
-  const filteredData = useMemo(() => 
-    selectedMac === 'All' ? data : data.filter(d => d.receiverMac === selectedMac)
-  , [data, selectedMac]);
+  // Filtered data based on global MAC filter and Time filter
+  const filteredData = useMemo(() => {
+    let filtered = selectedMac === 'All' ? data : data.filter(d => d.receiverMac === selectedMac);
+    
+    if (startTime !== 'All') {
+      const now = new Date();
+      let filterDate = new Date();
+      
+      if (startTime === '1h') filterDate.setHours(now.getHours() - 1);
+      else if (startTime === '24h') filterDate.setHours(now.getHours() - 24);
+      else if (startTime === '7d') filterDate.setDate(now.getDate() - 7);
+      else if (startTime === '30d') filterDate.setDate(now.getDate() - 30);
+      else if (startTime === '90d') filterDate.setDate(now.getDate() - 90);
+      else if (startTime === '180d') filterDate.setDate(now.getDate() - 180);
+      else if (startTime === '365d') filterDate.setDate(now.getDate() - 365);
+
+      filtered = filtered.filter(d => {
+        if (!d.recordTime) return false;
+        const dDate = new Date(d.recordTime);
+        return dDate >= filterDate;
+      });
+    }
+    
+    return filtered;
+  }, [data, selectedMac, startTime]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800">
@@ -49,7 +71,28 @@ export default function Dashboard({ data, onReset, filename }: DashboardProps) {
         </div>
 
         <div className="flex items-center gap-4 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-          <label className="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-wider">Global Filter</label>
+          <div className="flex items-center gap-2 pr-2 border-r border-slate-200">
+            <label className="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-wider">Date & Time</label>
+            <div className="relative">
+              <select 
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="bg-white border-slate-200 rounded px-3 py-1 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none pr-8 appearance-none cursor-pointer min-w-[100px]"
+              >
+                <option value="All">All Time</option>
+                <option value="1h">Past 1 Hour</option>
+                <option value="24h">Past 24 Hours</option>
+                <option value="7d">Past 7 Days</option>
+                <option value="30d">Past 30 Days</option>
+                <option value="90d">Past Quarter</option>
+                <option value="180d">Past Half Year</option>
+                <option value="365d">Past Year</option>
+              </select>
+              <ChevronDown className="w-4 h-4 absolute right-2 top-1.5 pointer-events-none text-slate-400" />
+            </div>
+          </div>
+
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Global Device</label>
           <div className="relative">
             <select 
               value={selectedMac}
