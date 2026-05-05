@@ -76,7 +76,7 @@ The time filter is not working?
 - Please confirm that the Date & Time fields in the CSV are in a standard time format.
 
 How do I reset the data? 
-- Click "Reset" next to the file name at the top of the page or return to the homepage icon to clear the current data and upload a new file.
+- Click "Update New File" at the top of the page or return to the homepage icon to clear the current data and upload a new file.
 
 ## 最新功能更新
 
