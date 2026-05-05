@@ -3,6 +3,83 @@
 </div>
 
 # WD Device Usage Analysis
+## Key feature:
+ScreenBeam Receiver Log Analysis Tool - User Guide
+This application is designed specifically for analyzing device connection logs (Receiver Logs) to help users quickly identify connection performance, stability issues, and reasons for device restarts.
+
+1. **Data Preparation and Upload**
+
+File Requirements
+Format: Must be a .csv file.
+File Name Restriction: The file name must begin with Receiver_Log (e.g., Receiver_Log.csv).
+
+Key Fields: The CSV file must contain the following fields (corresponding names may vary slightly):
+
+Receiver MAC / ReceiverId
+Receiver Name
+Source Name / Source User
+Event Description
+Duration
+Date & Time / RecordTime
+
+- Upload Steps
+
+Open the application's homepage.
+Drag and drop the CSV file that meets the requirements into the upload area, or click on the area to select the file.
+The system will automatically parse the data and display it in the dashboard.
+
+2. **Global Filters**
+Above all analytics tabs are two persistent filtering tools:
+
+- Date & Time:
+Selectable: All Time, Last 1 Hour, Last 24 Hours, Last 7 Days, Last 30 Days, Last Quarter, Half a Year, One Year.
+Update this option immediately filters data across all pages.
+
+- Global Device:
+Filter by specific Receiver MAC address, or view "All" for overall statistics.
+
+3. **Function Tab Details**
+
+- Tab 1: User Query
+This tab provides a detailed connection list, grouped by "Source User" and "Receiver".
+Receiver MAC: Displays the receiver's hardware address.
+
+-- Success / Disc / Abn:
+
+Success: Includes normal connection success, AirPlay, Chromecast, Infracast, and HDMI connections.
+Normal Disconnect: Normal connection interruption (e.g., RTSP tear-down, HDMI interruption).
+Abnormal Disconnect: Abnormal interruption (e.g., P2P failure, RTSP failure, media path recovery error).
+Alert: If multiple different channels or firmware versions are present, a warning icon will be displayed. Click to view detailed information.
+
+- Tab 2: Firmware Version
+Analyzes the impact of different firmware versions on connection success rate.
+Visual Chart: Displays a comparison of the number of successful connections between different versions.
+
+- Tab 3: Receiver Analysis
+In-depth analysis of individual receivers, calculating average connection duration and connection distribution.
+
+- Tab 4: Usage Duration Share
+Displays the percentage of total usage time for each source or receiver using pie charts or bar charts.
+
+- Tab 5: Receiver Reboot Analysis
+
+This is a tool specifically designed to diagnose ScreenBeam device stability, categorizing reboot events into two types:
+* Normal Reboot: Includes reboots triggered by management interface (MGT/CMS), USB setting updates, idle timeouts, or web setting changes.
+
+* Abnormal Reboot: Includes exception errors (Fault), memory full, hardware watchdog, system initialization failure, player unresponsiveness, and network connection (Netd) interruptions.
+
+Visual Statistics: Provides a comparative bar chart of "Reboot vs. Abnormal Reboot" to help identify devices with higher failure rates.
+
+4. **Frequently Asked Questions (FAQ)**
+
+Why does my uploaded file show an error?
+- Please check if the filename conforms to the Receiver_Log*.csv format and confirm that the CSV field names are correct.
+
+The time filter is not working?
+- Please confirm that the Date & Time fields in the CSV are in a standard time format.
+
+How do I reset the data? 
+- Click "Reset" next to the file name at the top of the page or return to the homepage icon to clear the current data and upload a new file.
 
 ## 最新功能更新
 
